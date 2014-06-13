@@ -285,7 +285,7 @@ This variable is defined in the Buildout configuration file as follows::
 
     mapserver_layer_metadata =
         "default_role_id" "-1"
-        "role_id_validation_pattern" "^-?[0-9]*$$"
+        "role_id" "^-?[0-9]*$$"
 
 The mapfile should be a ``.map.in`` file, for the Buildout variable to be
 substituted at Buildout execution time.
@@ -293,7 +293,10 @@ substituted at Buildout execution time.
 .. note::
 
     Before using Mapserver 6.4 ``mapserver_layer_metadata`` was placed in
-    the ``METADATA`` section.
+    the ``METADATA`` section, with
+    mapserver_layer_metadata =
+        "default_role_id" "-1"
+        "role_id_validation_pattern" "^-?[0-9]*$$"
 
 Variable Substitution
 ---------------------
@@ -307,7 +310,7 @@ To define variables, edit the matching ``MAP``/``LAYER``/``VALIDATION``
 section in the mapfile and add::
 
     "default_s_<variable>" "<default_value>"
-    "s_<variable>_validation_pattern" "<validation_pattern>"
+    "s_<variable>" "<validation_pattern>"
 
 The ``validation_pattern`` is a regular expression used to validate the
 argument. For example if you only want lowercase characters and commas,
@@ -317,7 +320,9 @@ in a ``.in`` file).
 .. note::
 
     Before using Mapserver 6.4 those parameters were placed in
-    the ``METADATA`` section.
+    the ``METADATA`` section:
+    "default_s_<variable>" "<default_value>"
+    "s_<variable>_validation_pattern" "<validation_pattern>"
 
 Now in ``LAYER`` place ``%s_<variable>%`` where you want to
 insert the variable value.
@@ -325,8 +330,9 @@ insert the variable value.
 Then in the administration interface, create a ``functionality`` named
 ``mapserver_substitution`` with the value: ``<variable>=<value>``.
 
-Please note that we cannot use substitution in the ``MATADATA`` values.
-As a result, if you would like to adapt the list of attributes returned in a
+The ``METADATA`` can be used for substition with Mapserver Versions greater than 6.4.
+
+If you would like to adapt the list of attributes returned in a
 WFS GetFeature or WMS GetFeatureInfo request, you have to adapt the columns
 listed in the ``DATA`` section. For instance::
 
@@ -350,7 +356,7 @@ listed in the ``DATA`` section. For instance::
     END
 
 Then add a ``mapserver_substitution`` functionality in the administration
-interface with for instance the following value for tthee given role:
+interface with for instance the following value for the given role:
 ``columns=t.private``.
 
 `MapServer documentation <http://mapserver.org/cgi/runsub.html>`_
